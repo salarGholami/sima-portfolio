@@ -1,5 +1,5 @@
 import ScrollRouter from "@/components/ScrollRouter";
 
-export default function HomePage() {
+export default function DynamicPage() {
   return <ScrollRouter />;
 }
