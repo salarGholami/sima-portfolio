@@ -1,145 +1,103 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState, useRef, FC } from "react";
+import { AnimatePresence } from "framer-motion";
 
 import HomeSection from "@/sections/HomeSection";
-import AboutMe from "@/sections/AboutSection"; // این مسیر رو با مسیر درست پروژه‌ات اصلاح کن
+import AboutMe from "@/sections/AboutSection";
 import ContactSection from "@/sections/ContactSection";
 
 const sections = ["home", "about", "contact"] as const;
-const components = {
+type SectionKey = (typeof sections)[number];
+
+const components: Record<SectionKey, FC<{ isActive: boolean }>> = {
   home: HomeSection,
   about: AboutMe,
   contact: ContactSection,
 };
 
-type Section = (typeof sections)[number];
+const SCROLL_TRANSITION_DURATION = 800;
 
-export default function ScrollRouter() {
-  const pathname = usePathname();
-  const router = useRouter();
+const ScrollRouter: FC = () => {
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
-  const [activeIndex, setActiveIndex] = useState(() => {
-    const idx = sections.findIndex((s) => pathname.includes(s));
-    return idx === -1 ? 0 : idx;
-  });
-  const [direction, setDirection] = useState<"up" | "down">("down");
-  const [isScrolling, setIsScrolling] = useState(false);
-
+  const activeIndexRef = useRef<number>(activeIndex);
+  const isTransitioningRef = useRef<boolean>(isTransitioning);
   const touchStartY = useRef<number | null>(null);
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-  const scrollDelta = useRef(0);
-
-  const SCROLL_THRESHOLD = 400;
-
-  const CurrentComponent = components[sections[activeIndex]];
 
   useEffect(() => {
-    const idx = sections.findIndex((s) => pathname.includes(s));
-    if (idx !== -1 && idx !== activeIndex) {
-      setDirection(idx > activeIndex ? "down" : "up");
-      setActiveIndex(idx);
-    }
-  }, [pathname, activeIndex]);
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
-  const changeSection = useCallback(
-    (newIndex: number, dir: "up" | "down") => {
-      if (newIndex < 0 || newIndex >= sections.length || isScrolling) return;
+  useEffect(() => {
+    isTransitioningRef.current = isTransitioning;
+  }, [isTransitioning]);
 
-      setDirection(dir);
-      setIsScrolling(true);
-      router.push(`/${sections[newIndex]}`);
+  const startTransitionToIndex = (newIndex: number) => {
+    if (isTransitioningRef.current) return;
+    if (newIndex === activeIndexRef.current) return;
 
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-      scrollTimeout.current = setTimeout(() => {
-        setIsScrolling(false);
-        scrollDelta.current = 0;
-      }, 2000);
-    },
-    [router, isScrolling]
-  );
+    setIsTransitioning(true);
 
-  const handleAccumulatedScroll = useCallback(
-    (deltaY: number) => {
-      scrollDelta.current += deltaY;
+    setTimeout(() => {
+      setActiveIndex(newIndex);
+      setIsTransitioning(false);
+    }, SCROLL_TRANSITION_DURATION);
+  };
 
-      if (Math.abs(scrollDelta.current) >= SCROLL_THRESHOLD) {
-        if (scrollDelta.current > 0 && activeIndex < sections.length - 1) {
-          changeSection(activeIndex + 1, "down");
-        } else if (scrollDelta.current < 0 && activeIndex > 0) {
-          changeSection(activeIndex - 1, "up");
-        }
-        scrollDelta.current = 0;
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (isTransitioningRef.current) return;
+
+      if (e.deltaY > 0 && activeIndexRef.current < sections.length - 1) {
+        startTransitionToIndex(activeIndexRef.current + 1);
+      } else if (e.deltaY < 0 && activeIndexRef.current > 0) {
+        startTransitionToIndex(activeIndexRef.current - 1);
       }
-    },
-    [activeIndex, changeSection]
-  );
+    };
 
-  const handleWheel = useCallback(
-    (e: WheelEvent) => {
-      e.preventDefault();
-      if (!isScrolling) handleAccumulatedScroll(e.deltaY);
-    },
-    [handleAccumulatedScroll, isScrolling]
-  );
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
 
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-  }, []);
-
-  const handleTouchEnd = useCallback(
-    (e: TouchEvent) => {
+    const handleTouchEnd = (e: TouchEvent) => {
       if (touchStartY.current === null) return;
-      const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-      if (!isScrolling) handleAccumulatedScroll(deltaY);
-      touchStartY.current = null;
-    },
-    [handleAccumulatedScroll, isScrolling]
-  );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (isScrolling) return;
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY.current - touchEndY;
 
-      if (e.key === "ArrowDown" && activeIndex < sections.length - 1) {
-        changeSection(activeIndex + 1, "down");
-      } else if (e.key === "ArrowUp" && activeIndex > 0) {
-        changeSection(activeIndex - 1, "up");
+      if (isTransitioningRef.current) return;
+
+      if (deltaY > 50 && activeIndexRef.current < sections.length - 1) {
+        startTransitionToIndex(activeIndexRef.current + 1);
+      } else if (deltaY < -50 && activeIndexRef.current > 0) {
+        startTransitionToIndex(activeIndexRef.current - 1);
       }
-    },
-    [isScrolling, activeIndex, changeSection]
-  );
 
-  useEffect(() => {
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("touchstart", handleTouchStart, { passive: false });
-    window.addEventListener("touchend", handleTouchEnd, { passive: false });
-    window.addEventListener("keydown", handleKeyDown);
+      touchStartY.current = null;
+    };
+
+    window.addEventListener("wheel", handleWheel);
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchend", handleTouchEnd);
-      window.removeEventListener("keydown", handleKeyDown);
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     };
-  }, [handleWheel, handleTouchStart, handleTouchEnd, handleKeyDown]);
+  }, []);
+
+  const ActiveComponent = components[sections[activeIndex]];
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={activeIndex}
-        initial={{ y: direction === "down" ? 5 : -5, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: direction === "down" ? -5 : 5, opacity: 0 }}
-        transition={{ duration: 2 }}
-        className="absolute inset-0"
-      >
-        {/* به AboutMe prop خروجی جهت انیمیشن معکوس رو میدیم */}
-        <CurrentComponent exitDirection={direction} />
-      </motion.div>
-    </AnimatePresence>
+    <div className="w-full h-screen overflow-hidden relative">
+      <AnimatePresence mode="wait">
+        <ActiveComponent key={sections[activeIndex]} isActive />
+      </AnimatePresence>
+    </div>
   );
-}
+};
+
+export default ScrollRouter;

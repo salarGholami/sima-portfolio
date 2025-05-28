@@ -2,10 +2,6 @@
 
 import { motion } from "framer-motion";
 
-interface AboutMeProps {
-  exitDirection: "up" | "down";
-}
-
 const title = "I'm";
 const name = {
   firstName: "Sima",
@@ -44,7 +40,31 @@ const nameAnimation = {
   }),
 };
 
-const AboutMe: React.FC<AboutMeProps> = ({ exitDirection }) => {
+const paragraphAnimation = {
+  hidden: { opacity: 0, y: -20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.15,
+      duration: 0.4,
+      ease: "easeOut",
+    },
+  }),
+  exit: (i: number, total: number) => ({
+    opacity: 0,
+    y: -20,
+    transition: {
+      delay: (total - i) * 0.1,
+      duration: 0.3,
+      ease: "easeIn",
+    },
+  }),
+};
+
+const AboutMe = () => {
+  const totalParagraphs = 6; // تعداد پاراگراف ها
+
   return (
     <div className="w-full h-screen flex justify-center overflow-hidden relative">
       <div className="flex flex-col md:flex-row justify-center items-start space-y-6 md:space-y-0 md:space-x-6 max-w-7xl w-full mx-4">
@@ -54,88 +74,85 @@ const AboutMe: React.FC<AboutMeProps> = ({ exitDirection }) => {
           <motion.div
             initial={{ height: 0 }}
             animate={{ height: "100%" }}
-            exit={{ height: 0 }}
+            exit={{ height: 0, transition: { duration: 0.5, delay: 1.5 } }}
             transition={{ duration: 0.5, delay: 0.5 }}
             className="absolute top-0 right-0 w-[2px] bg-white"
           />
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
-            exit={{ width: 0 }}
+            exit={{ width: 0, transition: { duration: 0.5, delay: 1 } }}
             transition={{ duration: 0.5, delay: 1 }}
             className="absolute bottom-0 right-0 h-[2px] bg-white"
           />
           <motion.div
             initial={{ height: 0 }}
             animate={{ height: "100%" }}
-            exit={{ height: 0 }}
+            exit={{ height: 0, transition: { duration: 0.5, delay: 0.5 } }}
             transition={{ duration: 0.5, delay: 1.5 }}
             className="absolute bottom-0 left-0 w-[2px] bg-white"
           />
 
-          <motion.h2
-            className="text-3xl font-semibold flex "
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={letterAnimation}
-          >
-            {[...title].map((char, index) => (
-              <motion.span
-                key={`title-${index}`}
-                custom={index}
-                variants={letterAnimation}
-                className={
-                  char === " "
-                    ? "mx-1"
-                    : "inline-block text-gray-300 text-3xl lg:text-4xl"
-                }
-              >
-                {char}
-              </motion.span>
-            ))}
-          </motion.h2>
-          <motion.h2
-            className="text-5xl lg:text-6xl font-semibold flex flex-wrap items-center justify-center"
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={nameAnimation}
-          >
-            {[...name.firstName].map((char, index) => (
-              <motion.span
-                key={`first-${index}`}
-                custom={index}
-                variants={nameAnimation}
-                className="inline-block text-white"
-              >
-                {char}
-              </motion.span>
-            ))}
-            <span className="mx-1" />
-            {[...name.lastName].map((char, index) => (
-              <motion.span
-                key={`last-${index}`}
-                custom={index + name.firstName.length}
-                variants={nameAnimation}
-                className="inline-block text-yellow-400"
-              >
-                {char}
-              </motion.span>
-            ))}
-          </motion.h2>
+          <div className="mx-auto flex flex-col space-y-2 relative z-10">
+            <motion.h2
+              className="text-3xl font-semibold flex items-start mx-1 md:mx-3 lg:mx-4"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={letterAnimation}
+            >
+              {[...title].map((char, index) => (
+                <motion.span
+                  key={`title-${index}`}
+                  custom={index}
+                  variants={letterAnimation}
+                  className={
+                    char === " "
+                      ? "mx-1"
+                      : "inline-block text-gray-300 text-3xl lg:text-4xl"
+                  }
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h2>
+            <motion.h2
+              className="text-5xl md:text-5xl lg:text-6xl font-semibold flex justify-center flex-wrap"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={nameAnimation}
+            >
+              {[...name.firstName].map((char, index) => (
+                <motion.span
+                  key={`first-${index}`}
+                  custom={index}
+                  variants={nameAnimation}
+                  className="inline-block text-white"
+                >
+                  {char}
+                </motion.span>
+              ))}
+              <span className="mx-0.5" />
+              {[...name.lastName].map((char, index) => (
+                <motion.span
+                  key={`last-${index}`}
+                  custom={index + name.firstName.length}
+                  variants={nameAnimation}
+                  className="inline-block text-yellow-400"
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.h2>
+          </div>
 
           {/* تصویر */}
           <div className="overflow-hidden mt-4 rounded-lg">
             <motion.div
               initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
               animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
-              exit={{
-                clipPath:
-                  exitDirection === "down"
-                    ? "inset(100% 0% 0% 0%)"
-                    : "inset(0% 0% 100% 0%)",
-              }}
+              exit={{ clipPath: "inset(100% 0% 0% 0%)" }}
               transition={{ delay: 0.5, duration: 2.2, ease: "easeInOut" }}
             >
               <img
@@ -150,10 +167,9 @@ const AboutMe: React.FC<AboutMeProps> = ({ exitDirection }) => {
         {/* سمت راست - متن بیوگرافی */}
         <motion.div
           className="max-w-lg w-full"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.5 }}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
         >
           <div
             id="bioText"
@@ -162,59 +178,108 @@ const AboutMe: React.FC<AboutMeProps> = ({ exitDirection }) => {
           >
             <div className="text-white text-xs md:text-[10px] lg:text-xs leading-relaxed md:pt-32 space-y-3 md:space-y-2 lg:space-y-3 lg:pt-28">
               {/* نوار زرد بالا */}
-              <div className="h-1 w-16 bg-yellow-500 rounded-full mb-2" />
+              <motion.div
+                className="h-1 w-16 bg-yellow-500 rounded-full mb-2"
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 50, opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              />
 
-              <p>
+              {/* پاراگراف‌ها بدون آرایه */}
+              <motion.p
+                custom={0}
+                variants={{
+                  hidden: paragraphAnimation.hidden,
+                  visible: paragraphAnimation.visible(0),
+                  exit: paragraphAnimation.exit(0, totalParagraphs),
+                }}
+                className="text-white"
+              >
                 Multidisciplinary designer with{" "}
                 <strong className="font-bold">10 years</strong> of experience in{" "}
                 <span className="text-yellow-400">branding</span>,{" "}
                 <span className="text-yellow-400">creative direction</span>, and{" "}
                 <span className="text-yellow-400">digital product design</span>{" "}
                 — passionate about turning ideas into bold visual stories.
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p
+                custom={1}
+                variants={{
+                  hidden: paragraphAnimation.hidden,
+                  visible: paragraphAnimation.visible(1),
+                  exit: paragraphAnimation.exit(1, totalParagraphs),
+                }}
+                className="text-white"
+              >
                 <strong>Expertise:</strong> I have very experience, designing
                 brand identity, Product design managing, Directing social media,
                 advertising projects, websites, web banners, content marketing
                 materials, and more. If you need a fresh look for your brand or
                 just want to refresh yourself, I'm here to help!
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p
+                custom={2}
+                variants={{
+                  hidden: paragraphAnimation.hidden,
+                  visible: paragraphAnimation.visible(2),
+                  exit: paragraphAnimation.exit(2, totalParagraphs),
+                }}
+                className="text-white"
+              >
                 I’ve worked with everyone from big names like Schwarzkopf to
                 emerging startups, always focusing on solutions that connect
                 with people. If you’re looking for a fresh perspective, let’s
                 create something meaningful together.
-              </p>
+              </motion.p>
 
-              <p>
+              <motion.p
+                custom={3}
+                variants={{
+                  hidden: paragraphAnimation.hidden,
+                  visible: paragraphAnimation.visible(3),
+                  exit: paragraphAnimation.exit(3, totalParagraphs),
+                }}
+                className="text-white"
+              >
                 I work closely with my clients to understand their vision and
                 goals, then I develop a custom solution to meet those needs.
-              </p>
+              </motion.p>
 
-              <p>
-                <strong className="font-semibold">Tool Knowledge:</strong>
-                <br />
-                I&apos;m Proficient in{" "}
-                <span className="text-yellow-400">Adobe Photoshop</span>,{" "}
-                <span className="text-yellow-400">Illustrator</span>,{" "}
-                <span className="text-yellow-400">After Effects</span>,{" "}
-                <span className="text-yellow-400">InDesign</span>,{" "}
-                <span className="text-yellow-400">Figma</span>,{" "}
-                <span className="text-yellow-400">AI-powered design tools</span>{" "}
-                and other professional software applications.
-              </p>
+              <motion.p
+                custom={4}
+                variants={{
+                  hidden: paragraphAnimation.hidden,
+                  visible: paragraphAnimation.visible(4),
+                  exit: paragraphAnimation.exit(4, totalParagraphs),
+                }}
+                className="text-white"
+              >
+                <strong className="text-yellow-400">Tool Knowledge:</strong> I'm
+                Proficient in Adobe Photoshop, Illustrator, After Effects,
+                InDesign, Figma, AI-powered design tools and other professional
+                software applications.
+              </motion.p>
 
-              <p>
-                <strong className="font-bold">Passion:</strong> My passion is to
-                create a strong and reputable brand that sells your product or
-                service to your target audience.
-              </p>
+              <motion.p
+                custom={5}
+                variants={{
+                  hidden: paragraphAnimation.hidden,
+                  visible: paragraphAnimation.visible(5),
+                  exit: paragraphAnimation.exit(5, totalParagraphs),
+                }}
+                className="text-white"
+              >
+                <strong className="text-yellow-400">Passion:</strong> My passion
+                is to create a strong and reputable brand that sells your
+                product or service to your target audience.
+              </motion.p>
 
               {/* فاصله برای موبایل */}
               {[...Array(3)].map((_, i) => (
-                <p key={i} className="block md:hidden">
+                <p key={"br" + i} className="block md:hidden">
                   <br />
                   <br />
                   <br />
