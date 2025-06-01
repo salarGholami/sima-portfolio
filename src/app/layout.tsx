@@ -2,8 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Scroll Sections",
-  description: "Next.js scroll between sections with URL sync",
+  title: "Sima Gholami | Portfolio",
+  description: "نمونه‌کارهای سیما غلامی، دیزاینر ارشد با تخصص در طراحی رابط و تجربه کاربری."
+
 };
 
 export default function RootLayout({

@@ -12,15 +12,11 @@ const letterAnimation = {
   hidden: { opacity: 0 },
   visible: (i: number) => ({
     opacity: 1,
-    transition: {
-      delay: i * 0.08,
-    },
+    transition: { delay: i * 0.08 },
   }),
   exit: (i: number) => ({
     opacity: 0,
-    transition: {
-      delay: i * 0.05,
-    },
+    transition: { delay: i * 0.05 },
   }),
 };
 
@@ -28,15 +24,11 @@ const nameAnimation = {
   hidden: { opacity: 0 },
   visible: (i: number) => ({
     opacity: 1,
-    transition: {
-      delay: 1 + i * 0.05,
-    },
+    transition: { delay: 1 + i * 0.05 },
   }),
   exit: (i: number) => ({
     opacity: 0,
-    transition: {
-      delay: i * 0.03,
-    },
+    transition: { delay: i * 0.03 },
   }),
 };
 
@@ -45,25 +37,54 @@ const paragraphAnimation = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      delay: i * 0.15,
-      duration: 0.4,
-      ease: "easeOut",
-    },
+    transition: { delay: i * 0.15, duration: 0.4, ease: "easeOut" },
   }),
   exit: (i: number, total: number) => ({
     opacity: 0,
     y: -20,
-    transition: {
-      delay: (total - i) * 0.1,
-      duration: 0.3,
-      ease: "easeIn",
-    },
+    transition: { delay: (total - i) * 0.1, duration: 0.3, ease: "easeIn" },
   }),
 };
 
+const paragraphs = [
+  <>
+    Multidisciplinary designer with{" "}
+    <strong className="font-bold">10 years</strong> of experience in{" "}
+    <span className="text-yellow-400">branding</span>,{" "}
+    <span className="text-yellow-400">creative direction</span>, and{" "}
+    <span className="text-yellow-400">digital product design</span> — passionate
+    about turning ideas into bold visual stories.
+  </>,
+  <>
+    <strong>Expertise:</strong> I have very experience, designing brand
+    identity, Product design managing, Directing social media, advertising
+    projects, websites, web banners, content marketing materials, and more. If
+    you need a fresh look for your brand or just want to refresh yourself, I'm
+    here to help!
+  </>,
+  <>
+    I’ve worked with everyone from big names like Schwarzkopf to emerging
+    startups, always focusing on solutions that connect with people. If you’re
+    looking for a fresh perspective, let’s create something meaningful together.
+  </>,
+  <>
+    I work closely with my clients to understand their vision and goals, then I
+    develop a custom solution to meet those needs.
+  </>,
+  <>
+    <strong className="text-yellow-400">Tool Knowledge:</strong> I'm Proficient
+    in Adobe Photoshop, Illustrator, After Effects, InDesign, Figma, AI-powered
+    design tools and other professional software applications.
+  </>,
+  <>
+    <strong className="text-yellow-400">Passion:</strong> My passion is to
+    create a strong and reputable brand that sells your product or service to
+    your target audience.
+  </>,
+];
+
 const AboutMe = () => {
-  const totalParagraphs = 6; // تعداد پاراگراف ها
+  const totalParagraphs = paragraphs.length;
 
   return (
     <div className="w-full h-screen flex justify-center overflow-hidden relative">
@@ -186,96 +207,21 @@ const AboutMe = () => {
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               />
 
-              {/* پاراگراف‌ها بدون آرایه */}
-              <motion.p
-                custom={0}
-                variants={{
-                  hidden: paragraphAnimation.hidden,
-                  visible: paragraphAnimation.visible(0),
-                  exit: paragraphAnimation.exit(0, totalParagraphs),
-                }}
-                className="text-white"
-              >
-                Multidisciplinary designer with{" "}
-                <strong className="font-bold">10 years</strong> of experience in{" "}
-                <span className="text-yellow-400">branding</span>,{" "}
-                <span className="text-yellow-400">creative direction</span>, and{" "}
-                <span className="text-yellow-400">digital product design</span>{" "}
-                — passionate about turning ideas into bold visual stories.
-              </motion.p>
-
-              <motion.p
-                custom={1}
-                variants={{
-                  hidden: paragraphAnimation.hidden,
-                  visible: paragraphAnimation.visible(1),
-                  exit: paragraphAnimation.exit(1, totalParagraphs),
-                }}
-                className="text-white"
-              >
-                <strong>Expertise:</strong> I have very experience, designing
-                brand identity, Product design managing, Directing social media,
-                advertising projects, websites, web banners, content marketing
-                materials, and more. If you need a fresh look for your brand or
-                just want to refresh yourself, I'm here to help!
-              </motion.p>
-
-              <motion.p
-                custom={2}
-                variants={{
-                  hidden: paragraphAnimation.hidden,
-                  visible: paragraphAnimation.visible(2),
-                  exit: paragraphAnimation.exit(2, totalParagraphs),
-                }}
-                className="text-white"
-              >
-                I’ve worked with everyone from big names like Schwarzkopf to
-                emerging startups, always focusing on solutions that connect
-                with people. If you’re looking for a fresh perspective, let’s
-                create something meaningful together.
-              </motion.p>
-
-              <motion.p
-                custom={3}
-                variants={{
-                  hidden: paragraphAnimation.hidden,
-                  visible: paragraphAnimation.visible(3),
-                  exit: paragraphAnimation.exit(3, totalParagraphs),
-                }}
-                className="text-white"
-              >
-                I work closely with my clients to understand their vision and
-                goals, then I develop a custom solution to meet those needs.
-              </motion.p>
-
-              <motion.p
-                custom={4}
-                variants={{
-                  hidden: paragraphAnimation.hidden,
-                  visible: paragraphAnimation.visible(4),
-                  exit: paragraphAnimation.exit(4, totalParagraphs),
-                }}
-                className="text-white"
-              >
-                <strong className="text-yellow-400">Tool Knowledge:</strong> I'm
-                Proficient in Adobe Photoshop, Illustrator, After Effects,
-                InDesign, Figma, AI-powered design tools and other professional
-                software applications.
-              </motion.p>
-
-              <motion.p
-                custom={5}
-                variants={{
-                  hidden: paragraphAnimation.hidden,
-                  visible: paragraphAnimation.visible(5),
-                  exit: paragraphAnimation.exit(5, totalParagraphs),
-                }}
-                className="text-white"
-              >
-                <strong className="text-yellow-400">Passion:</strong> My passion
-                is to create a strong and reputable brand that sells your
-                product or service to your target audience.
-              </motion.p>
+              {/* پاراگراف‌ها از آرایه رندر می‌شوند */}
+              {paragraphs.map((content, i) => (
+                <motion.p
+                  key={i}
+                  custom={i}
+                  variants={{
+                    hidden: paragraphAnimation.hidden,
+                    visible: paragraphAnimation.visible(i),
+                    exit: paragraphAnimation.exit(i, totalParagraphs),
+                  }}
+                  className="text-white"
+                >
+                  {content}
+                </motion.p>
+              ))}
 
               {/* فاصله برای موبایل */}
               {[...Array(3)].map((_, i) => (
