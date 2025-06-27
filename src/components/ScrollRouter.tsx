@@ -11,27 +11,27 @@ import React, {
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-import HomeSection from "@/sections/HomeSection";
-import AboutMe from "@/sections/AboutSection";
-import Hi from "@/sections/ClientSection";
-import ReseumeSection from "@/sections/ReseumeSection";
+import Client from "@/sections/client/Client";
+import Home from "@/sections/home/Home";
+import Resume from "@/sections/resume/Resume";
+import AboutMe from "@/sections/about/AboutMe";
+import Contents from "@/sections/contents/Contents";
 
-const sections = ["home", "about", "contact", "hi"] as const;
+const sections = ["home", "about", "resume", "client", "contents"] as const;
 type SectionKey = (typeof sections)[number];
 
 const components: Record<SectionKey, FC<{ isActive: boolean }>> = {
-  home: HomeSection,
+  home: Home,
   about: AboutMe,
-  contact: ReseumeSection,
-
-  hi: Hi,
+  resume: Resume,
+  client: Client,
+  contents: Contents,
 };
 
-const SCROLL_THRESHOLD = 2;
-const TOUCH_DELTA_THRESHOLD = 120;
-const WHEEL_DELTA_THRESHOLD = 30;
+const TOUCH_DELTA_THRESHOLD = 150; // افزایش حساسیت برای تاچ
+const WHEEL_DELTA_THRESHOLD = 100; // افزایش حساسیت برای چرخ اسکرول
 const DEBOUNCE_DELAY = 300;
-const TRANSITION_LOCK_DURATION = 1000;
+const TRANSITION_LOCK_DURATION = 1500; // افزایش زمان قفل انتقال
 
 const ScrollRouter: FC = () => {
   const router = useRouter();
@@ -48,20 +48,22 @@ const ScrollRouter: FC = () => {
 
   const hasReachedScrollEnd = () => {
     const container = containerRef.current;
-    return container
-      ? Math.abs(
-          container.scrollTop + container.clientHeight - container.scrollHeight
-        ) <= SCROLL_THRESHOLD
-      : false;
+    if (!container) return false;
+
+    const scrollBottom = container.scrollTop + container.clientHeight;
+    return scrollBottom >= container.scrollHeight - 10; // حساسیت کمتر
   };
 
   const hasReachedScrollStart = () => {
     const container = containerRef.current;
-    return container ? container.scrollTop <= SCROLL_THRESHOLD : false;
+    if (!container) return false;
+
+    return container.scrollTop <= 10; // حساسیت کمتر
   };
 
+  // debounce اصلاح شده برای لغو timeout قبلی
   const debounce = (func: () => void, delay: number) => {
-    if (debounceTimeout.current) return;
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     debounceTimeout.current = setTimeout(() => {
       func();
       debounceTimeout.current = null;
@@ -103,11 +105,13 @@ const ScrollRouter: FC = () => {
     const handleWheel = (e: WheelEvent) => {
       if (isLocked.current || Math.abs(e.deltaY) < WHEEL_DELTA_THRESHOLD)
         return;
+
       debounce(() => {
-        if (e.deltaY > 0 && hasReachedScrollEnd())
+        if (e.deltaY > 0 && hasReachedScrollEnd()) {
           startTransitionToIndex(activeIndexRef.current + 1);
-        else if (e.deltaY < 0 && hasReachedScrollStart())
+        } else if (e.deltaY < 0 && hasReachedScrollStart()) {
           startTransitionToIndex(activeIndexRef.current - 1);
+        }
       }, DEBOUNCE_DELAY);
     };
 
@@ -118,20 +122,23 @@ const ScrollRouter: FC = () => {
     const handleTouchEnd = (e: TouchEvent) => {
       if (touchStartY.current === null || isLocked.current) return;
       const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+
       if (deltaY > TOUCH_DELTA_THRESHOLD && hasReachedScrollEnd()) {
         startTransitionToIndex(activeIndexRef.current + 1);
       } else if (deltaY < -TOUCH_DELTA_THRESHOLD && hasReachedScrollStart()) {
         startTransitionToIndex(activeIndexRef.current - 1);
       }
+
       touchStartY.current = null;
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isLocked.current) return;
-      if (e.key === "ArrowDown" && hasReachedScrollEnd())
+      if (e.key === "ArrowDown" && hasReachedScrollEnd()) {
         startTransitionToIndex(activeIndexRef.current + 1);
-      else if (e.key === "ArrowUp" && hasReachedScrollStart())
+      } else if (e.key === "ArrowUp" && hasReachedScrollStart()) {
         startTransitionToIndex(activeIndexRef.current - 1);
+      }
     };
 
     window.addEventListener("wheel", handleWheel, { passive: true });
