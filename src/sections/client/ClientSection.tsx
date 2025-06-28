@@ -1,6 +1,6 @@
 import React from "react";
 
-type Props = {};
+type Props = object;
 
 function ClientSection({}: Props) {
   return <div>ClientSection</div>;
