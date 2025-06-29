@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const title = "I'm";
 const name = {
@@ -59,20 +60,20 @@ const paragraphs = [
     <strong>Expertise:</strong> I have very experience, designing brand
     identity, Product design managing, Directing social media, advertising
     projects, websites, web banners, content marketing materials, and more. If
-    you need a fresh look for your brand or just want to refresh yourself, I'm
+    you need a fresh look for your brand or just want to refresh yourself, I&rsquo;m
     here to help!
   </>,
   <>
-    I’ve worked with everyone from big names like Schwarzkopf to emerging
-    startups, always focusing on solutions that connect with people. If you’re
-    looking for a fresh perspective, let’s create something meaningful together.
+    I&rsquo;ve worked with everyone from big names like Schwarzkopf to emerging
+    startups, always focusing on solutions that connect with people. If you&rsquo;re
+    looking for a fresh perspective, let&rsquo;s create something meaningful together.
   </>,
   <>
     I work closely with my clients to understand their vision and goals, then I
     develop a custom solution to meet those needs.
   </>,
   <>
-    <strong className="text-yellow-400">Tool Knowledge:</strong> I'm Proficient
+    <strong className="text-yellow-400">Tool Knowledge:</strong> I&rsquo;m Proficient
     in Adobe Photoshop, Illustrator, After Effects, InDesign, Figma, AI-powered
     design tools and other professional software applications.
   </>,
@@ -176,10 +177,13 @@ const AboutSection = () => {
               exit={{ clipPath: "inset(100% 0% 0% 0%)" }}
               transition={{ delay: 0.5, duration: 2.2, ease: "easeInOut" }}
             >
-              <img
+              <Image
                 src="/image/landingPage/sima-brown-hair.jpeg"
                 className="w-full object-cover"
                 alt="Sima"
+                width={800}
+                height={600}
+                priority
               />
             </motion.div>
           </div>

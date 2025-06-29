@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const CardsSection: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pendingPage, setPendingPage] = useState<number | null>(null);
   const [cardsPerPage, setCardsPerPage] = useState(8);
   const [isExiting, setIsExiting] = useState(false);
   const [selectedCart, setSelectedCart] = useState<(typeof carts)[0] | null>(
@@ -36,15 +35,17 @@ const CardsSection: React.FC = () => {
     currentPage * cardsPerPage
   );
 
-  const triggerPageChange = (page: number) => {
-    if (page === currentPage || isExiting) return;
-    setIsExiting(true);
-    setPendingPage(page);
-    setTimeout(() => {
-      setCurrentPage(page);
-      setIsExiting(false);
-    }, 20);
-  };
+  const triggerPageChange = useCallback(
+    (page: number) => {
+      if (page === currentPage || isExiting) return;
+      setIsExiting(true);
+      setTimeout(() => {
+        setCurrentPage(page);
+        setIsExiting(false);
+      }, 20);
+    },
+    [currentPage, isExiting]
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -54,7 +55,7 @@ const CardsSection: React.FC = () => {
         triggerPageChange(currentPage - 1);
       }
     },
-    [currentPage, totalPages]
+    [currentPage, totalPages, triggerPageChange]
   );
 
   useEffect(() => {
@@ -78,7 +79,7 @@ const CardsSection: React.FC = () => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              variants={{}} 
+              variants={{}}
             >
               <Card
                 cart={cart}
