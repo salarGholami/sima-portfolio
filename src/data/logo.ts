@@ -37,7 +37,7 @@ const rawLogos = [
   },
 ];
 
-export const logos: Logo[] = rawLogos.map((item, index) => ({
+export const logos: Logo[] = rawLogos.map((item) => ({
   title: item.title,
   images: item.images,
   company: item.company,
