@@ -60,20 +60,20 @@ const paragraphs = [
     <strong>Expertise:</strong> I have very experience, designing brand
     identity, Product design managing, Directing social media, advertising
     projects, websites, web banners, content marketing materials, and more. If
-    you need a fresh look for your brand or just want to refresh yourself, I&rsquo;m
+    you need a fresh look for your brand or just want to refresh yourself, I'm
     here to help!
   </>,
   <>
-    I&rsquo;ve worked with everyone from big names like Schwarzkopf to emerging
-    startups, always focusing on solutions that connect with people. If you&rsquo;re
-    looking for a fresh perspective, let&rsquo;s create something meaningful together.
+    I’ve worked with everyone from big names like Schwarzkopf to emerging
+    startups, always focusing on solutions that connect with people. If you’re
+    looking for a fresh perspective, let’s create something meaningful together.
   </>,
   <>
     I work closely with my clients to understand their vision and goals, then I
     develop a custom solution to meet those needs.
   </>,
   <>
-    <strong className="text-yellow-400">Tool Knowledge:</strong> I&rsquo;m Proficient
+    <strong className="text-yellow-400">Tool Knowledge:</strong> I'm Proficient
     in Adobe Photoshop, Illustrator, After Effects, InDesign, Figma, AI-powered
     design tools and other professional software applications.
   </>,
