@@ -4,32 +4,35 @@ import { ResumeBoxItemType } from "@/types/resume";
 import { FC } from "react";
 import ResumeBox from "./ResumeBox";
 
-
-
 const workExperience: ResumeBoxItemType[] = [
   {
     year: "2014 – 2019",
-    title: "MODEKEY – Fashion Company",
+    title: "- Fashion Company",
+    companyName: "MODEKEY",
     subtitle: "Graphic Designer and event planner",
   },
   {
     year: "2019 – 2021",
-    title: "FIXSO – Advertising Agency",
+    title: "- Advertising Agency",
+    companyName: "FIXSO",
     subtitle: "Art Director, Designer, Creative and Advertising Consultant",
   },
   {
     year: "2021 – 2022",
-    title: "DIGIKALA Marketplace",
+    title: "- Marketplace",
+    companyName: "DIGIKALA",
     subtitle: "Senior Graphic Designer at DIGISTYLE",
   },
   {
     year: "2022 – 2023",
-    title: "IRANTALENT HR Company",
+    title: "- HR Company",
+    companyName: "IRANTALENT",
     subtitle: "Design Lead at KARDIX",
   },
   {
     year: "2024 – 2025",
-    title: "APSAN Fintech Company ( ASAN PARDAKHT )",
+    title: "- Fintech Company ( ASAN PARDAKHT )",
+    companyName: "APSAN",
     subtitle: "Product Design Manager",
   },
 ];

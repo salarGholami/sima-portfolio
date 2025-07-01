@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sima Gholami | Portfolio",
-  description: "نمونه‌کارهای سیما غلامی، دیزاینر ارشد با تخصص در طراحی رابط و تجربه کاربری."
-
+  description: "مدیر هنری و مدیر طراحی محصول",
 };
 
 export default function RootLayout({

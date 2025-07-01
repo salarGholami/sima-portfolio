@@ -85,7 +85,7 @@ const HomeSection: React.FC = () => {
               className="absolute top-0 left-0 w-[2px] bg-white origin-bottom"
             />
 
-            <div className="relative z-10 text-left space-y-4 md:p-2 lg:p-5">
+            <div className="relative z-10 text-left space-y-4 md:p-2 lg:p-5  text-white">
               <motion.h3
                 className="text-xs sm:text-sm uppercase tracking-widest text-gray-300"
                 initial="hidden"
@@ -101,7 +101,7 @@ const HomeSection: React.FC = () => {
               </motion.h3>
 
               <motion.h1
-                className="text-5xl sm:text-6xl py-2 lg:text-6xl xl:text-7xl font-semibold leading-tight"
+                className="text-5xl sm:text-6xl py-2 lg:text-6xl xl:text-7xl font-semibold leading-tight text-white"
                 initial="hidden"
                 animate="visible"
                 exit={{

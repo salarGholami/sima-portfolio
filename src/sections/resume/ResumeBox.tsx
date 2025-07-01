@@ -73,7 +73,10 @@ const ResumeBox: FC<{
               />
             </div>
             <div className="flex-1">
-              <div className="text-[11px] font-semibold">{item.title}</div>
+              <div className="text-[11px] ">
+                <span className="font-bold">{item.companyName}</span>  {" "}
+                <span className="text-gray-100">{item.title}</span>
+              </div>
               {item.subtitle && (
                 <div className="text-yellow-400 text-[10px]">
                   {item.subtitle}
